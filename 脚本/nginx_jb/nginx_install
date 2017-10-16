@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#关闭防火墙和selinux
+setenforce 0
+iptables -F
+
+#测试网络
+ping -c 5 172.25.254.250 &>/dev/null || echo "网络有问题，请检查！"
+
+#安装软件
+rpm -ivh ftp://172.25.254.250/notes/project/UP200/UP200_nginx-master/pkg/nginx-1.8.0-1.el7.ngx.x86_64.rpm &>/dev/null && echo "nginx安装成功！"
+
+#启动服务
+systemctl restart nginx &>/dev/null
+netstat -tunpl |grep :80 &>/dev/null && echo "nginx服务已启动！"
+
